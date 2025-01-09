@@ -10,6 +10,15 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+## Code関連
+*.code-workspace
+
+## HSP関連
+*.ax
+
+## プライベートディレクトリ
+/[Pp]rivate/
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/

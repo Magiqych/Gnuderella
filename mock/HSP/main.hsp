@@ -121,6 +121,7 @@
 
 
 		; ノーツ描画
+		notes_counter = 0
 		;シングルノーツ
 		;シングルノーツ生成フラグ調整
 		for single_notes_index,0,single_notes_num,1
@@ -132,13 +133,9 @@
 			if is_single_notes_spawn(single_notes_index) = 1 && single_notes_pos(single_notes_index,1) <= tapy{
 				is_single_notes_spawn(single_notes_index) = 0
 			}
-		next
-		;シングルノーツ描画
-		notes_cn = 0
-		for single_notes_index,0,single_notes_num,1
 			color 0,0,255
 			if is_single_notes_spawn(single_notes_index) = 1 {
-				notes_cn = notes_cn + 1
+				notes_counter = notes_counter + 1
 				//速度座標計算
 				for i,0,3,1
 					single_notes_speed(single_notes_index,i) = single_notes_speed(single_notes_index,i) + single_notes_acceleration(single_notes_index,i)
@@ -148,7 +145,7 @@
 				d3circle single_notes_pos(single_notes_index,0),single_notes_pos(single_notes_index,1),single_notes_pos(single_notes_index,2),  20,1
 			}
 		next
-		logging = logging + "\n notes:" + str(notes_cn)
+		logging = logging + "\n notes:" + str(notes_counter)
 		logging = logging + "\n timing:" + str(timing)
 		;タイミング描写
 		color 255,255,255

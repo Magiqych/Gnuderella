@@ -40,12 +40,12 @@
 	next
 
 	;ノーツの初期設定
-	single_notes_num = 100;シングルノーツ数
+	single_notes_num = 1000;シングルノーツ数
 	notes_num = single_notes_num ;ノーツ数
 
 	;ノーツの速度成分を計算する
 	;計算上必要なプロパティ
-	notes_speed_settings = -1.0
+	notes_speed_settings = -9.0
 	delta_x = 0.0
 	delta_y = notesy - tapy
 	delta_z = notesz - tapz
@@ -91,9 +91,9 @@
 	next
 	;タイミング変数
 	timing = 0
-	;ログ変数
-	logging = ""
 	repeat
+		;ログ変数
+		logging = ""
 		;描写先を仮想画面にスイッチ
 		redraw 0
 		; 画面クリア
@@ -121,41 +121,42 @@
 
 
 		; ノーツ描画
-		for notes_index,0,notes_num,1
-			;シングルノーツ
-			;シングルノーツ生成フラグ調整
-			for single_notes_index,0,single_notes_num,1
-				;タイミングが来たノーツを生成
-				if single_notes_spawn_timing(single_notes_index) <= timing{
-					is_single_notes_spawn(single_notes_index) = 1
-				}
-				;タップエリアより手前にノーツが来た場合はノーツを消去
-				if is_single_notes_spawn(single_notes_index) = 1 && single_notes_pos(single_notes_index,1) <= tapy{
-					is_single_notes_spawn(single_notes_index) = 0
-				}
-			next
-			;シングルノーツ描画
-			for single_notes_index,0,single_notes_num,1
-				color 0,0,255
-				if is_single_notes_spawn(single_notes_index) = 1 {
-					//速度座標計算
-					for i,0,3,1
-						single_notes_speed(single_notes_index,i) = single_notes_speed(single_notes_index,i) + single_notes_acceleration(single_notes_index,i)
-						single_notes_pos(single_notes_index,i) = single_notes_pos(single_notes_index,i) + single_notes_speed(single_notes_index,i)
-					next
-					logging = str(single_notes_speed(single_notes_index,0)) + "," + str(single_notes_speed(single_notes_index,1)) + "," + str(single_notes_speed(single_notes_index,2))
-					d3circle single_notes_pos(single_notes_index,0),single_notes_pos(single_notes_index,1),single_notes_pos(single_notes_index,2),  20,1
-				}
-			next
+		;シングルノーツ
+		;シングルノーツ生成フラグ調整
+		for single_notes_index,0,single_notes_num,1
+			;タイミングが来たノーツを生成
+			if single_notes_spawn_timing(single_notes_index) <= timing{
+				is_single_notes_spawn(single_notes_index) = 1
+			}
+			;タップエリアより手前にノーツが来た場合はノーツを消去
+			if is_single_notes_spawn(single_notes_index) = 1 && single_notes_pos(single_notes_index,1) <= tapy{
+				is_single_notes_spawn(single_notes_index) = 0
+			}
 		next
-		
+		;シングルノーツ描画
+		notes_cn = 0
+		for single_notes_index,0,single_notes_num,1
+			color 0,0,255
+			if is_single_notes_spawn(single_notes_index) = 1 {
+				notes_cn = notes_cn + 1
+				//速度座標計算
+				for i,0,3,1
+					single_notes_speed(single_notes_index,i) = single_notes_speed(single_notes_index,i) + single_notes_acceleration(single_notes_index,i)
+					single_notes_pos(single_notes_index,i) = single_notes_pos(single_notes_index,i) + single_notes_speed(single_notes_index,i)
+				next
+				logging = str(single_notes_speed(single_notes_index,0)) + "," + str(single_notes_speed(single_notes_index,1)) + "," + str(single_notes_speed(single_notes_index,2))
+				d3circle single_notes_pos(single_notes_index,0),single_notes_pos(single_notes_index,1),single_notes_pos(single_notes_index,2),  20,1
+			}
+		next
+		logging = logging + "\n notes:" + str(notes_cn)
+		logging = logging + "\n timing:" + str(timing)
 		;タイミング描写
 		color 255,255,255
-		d3mes logging, -200,tapy,250
+		d3mes logging, -200,tapy,265
 		;タイミング変数インクリメント
 		timing = timing + 1
 		;画面更新
 		redraw 1
-		await 50
+		await 30
 	loop
 

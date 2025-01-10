@@ -1,0 +1,158 @@
+;============================================================
+;                                     	magiqych/2025-01-09
+;	GnuDerella mock v.1
+;
+;============================================================
+
+#include "d3m.hsp"
+
+    ;カメラの初期設定
+    dim cam,6
+	;camPosition
+    cam(0) = 0 : cam(1) = 0: cam(2) = 100
+	;camDestination
+	cam(3) = 0 : cam(4) = 100 : cam(5) = 100
+	d3setcam cam(0),cam(1),cam(2),cam(3),cam(4),cam(5)
+
+	;レーン数設定
+	lane_num = 5
+
+	;ノーツ生成エリアの初期設定
+	notes_spawn_pos_y = 1500.0
+	notes_spawn_pos_z = 700.0
+	ddim noteSpawnCircle,lane_num,3
+	;tapCircleの初期座標設定
+	for index,0,lane_num,1
+		noteSpawnCircle(index,0) = double(-200 + (500/lane_num) * index)
+		noteSpawnCircle(index,1) = notes_spawn_pos_y
+		noteSpawnCircle(index,2) = notes_spawn_pos_z
+	next
+
+	;タップエリアの初期設定
+	tap_area_pos_y = 350.0
+	tap_area_pos_z = 0.0
+	ddim tapCircle,lane_num,3
+	;tapCircleの初期座標設定
+	for index,0,lane_num,1
+		tapCircle(index,0) = noteSpawnCircle(index,0)
+		tapCircle(index,1) = tap_area_pos_y
+		tapCircle(index,2) = tap_area_pos_z
+	next
+
+	;ノーツの初期設定
+	single_notes_num = 1000;シングルノーツ数
+	notes_num = single_notes_num ;ノーツ数
+
+	;ノーツの速度成分を計算する
+	;計算上必要なプロパティ
+	notes_speed_settings = -9.0
+	delta_x = 0.0
+	delta_y = notes_spawn_pos_y - tap_area_pos_y
+	delta_z = notes_spawn_pos_z - tap_area_pos_z
+	delta_t = double(delta_y / abs(notes_speed_settings))
+	;シングルノーツ速度の設定
+	ddim single_note_speed,3
+	single_note_speed(0) = 0.0
+	single_note_speed(1) = notes_speed_settings
+	single_note_speed(2) = 0.0
+	dim single_note_acceleration,3
+	single_note_acceleration(0) = 0.0
+	single_note_acceleration(1) = 0.0
+	single_note_acceleration(2) = 0.0 - double((delta_z*2)/(delta_t*delta_t))
+	;シングルノーツプロパティ
+	dim is_single_notes_spawn,single_notes_num ;ノーツ生成フラグ
+	ddim single_notes_spawn_timing,single_notes_num ;ノーツ生成タイミング
+	ddim single_notes_pos,single_notes_num,3 ;ノーツ座標
+	ddim single_notes_speed,single_notes_num,3 ;ノーツスピード
+	ddim single_notes_acceleration,single_notes_num,3 ;ノーツ加速度
+	ddim single_notes_destination,single_notes_num,3 ;ノーツ目的地
+	;notesプロパティ初期設定
+	for index,0,single_notes_num,1
+		;ノート生成フラグと生成タイミングの初期設定
+		is_single_notes_spawn(index) = 0
+		single_notes_spawn_timing(index) = double(10 * (index+1))
+		;ノーツの目的地の初期設定
+		dstIndex = rnd(lane_num)
+		single_notes_destination(index,0) = tapCircle(dstIndex,0)
+		single_notes_destination(index,1) = tapCircle(dstIndex,1)
+		single_notes_destination(index,2) = tapCircle(dstIndex,2)
+		;ノーツの座標の初期設定
+		single_notes_pos(index,0) = noteSpawnCircle(dstIndex,0)
+		single_notes_pos(index,1) = noteSpawnCircle(dstIndex,1)
+		single_notes_pos(index,2) = noteSpawnCircle(dstIndex,2)
+		;ノーツのスピードの初期設定
+		single_notes_speed(index,0) = 0.0
+		single_notes_speed(index,1) = notes_speed_settings
+		single_notes_speed(index,2) = 0.0
+		;ノーツの加速度の初期設定
+		single_notes_acceleration(index,0) = single_note_acceleration(0)
+		single_notes_acceleration(index,1) = single_note_acceleration(1)
+		single_notes_acceleration(index,2) = single_note_acceleration(2)
+	next
+	;タイミング変数
+	timing = 0
+	repeat
+		;ログ変数
+		logging = ""
+		;描写先を仮想画面にスイッチ
+		redraw 0
+		; 画面クリア
+		color 0, 0, 0 : boxf
+
+		; 座標平面描画
+		color 0,255,0
+		repeat 31
+			a = cnt * 2000 / 30 - 1000
+			d3line a, 1000, 0,  a, -1000, 0
+			d3line 1000, a, 0,  -1000, a, 0
+		loop
+
+		; タップエリア描画
+		color 255,0,0
+		for index,0,lane_num,1
+			d3circle tapCircle(index,0),tapCircle(index,1),tapCircle(index,2),  20
+		next
+
+		; ノーツ生成エリア描画
+		color 255,0,0
+		for index,0,lane_num,1
+			d3circle noteSpawnCircle(index,0),noteSpawnCircle(index,1),noteSpawnCircle(index,2),  20
+		next
+
+
+		; ノーツ描画
+		notes_counter = 0
+		;シングルノーツ描画
+		color 0,0,255
+		for single_notes_index,0,single_notes_num,1
+			;タイミングが来たノーツの生成フラグを立てる
+			if single_notes_spawn_timing(single_notes_index) <= timing{
+				is_single_notes_spawn(single_notes_index) = 1
+			}
+			;タップエリアより手前にノーツが来た場合はノーツを消去
+			if is_single_notes_spawn(single_notes_index) = 1 && single_notes_pos(single_notes_index,1) <= tap_area_pos_y{
+				is_single_notes_spawn(single_notes_index) = 0
+			}
+			if is_single_notes_spawn(single_notes_index) = 1 {
+				notes_counter = notes_counter + 1
+				//速度座標計算
+				for i,0,3,1
+					single_notes_speed(single_notes_index,i) = single_notes_speed(single_notes_index,i) + single_notes_acceleration(single_notes_index,i)
+					single_notes_pos(single_notes_index,i) = single_notes_pos(single_notes_index,i) + single_notes_speed(single_notes_index,i)
+				next
+				logging = str(single_notes_speed(single_notes_index,0)) + "," + str(single_notes_speed(single_notes_index,1)) + "," + str(single_notes_speed(single_notes_index,2))
+				d3circle single_notes_pos(single_notes_index,0),single_notes_pos(single_notes_index,1),single_notes_pos(single_notes_index,2),  20,1
+			}
+		next
+		logging = logging + "\n notes:" + str(notes_counter)
+		logging = logging + "\n timing:" + str(timing)
+		;タイミング描写
+		color 255,255,255
+		d3mes logging, -200,tap_area_pos_y,265
+		;タイミング変数インクリメント
+		timing = timing + 1
+		;画面更新
+		redraw 1
+		await 30
+	loop
+

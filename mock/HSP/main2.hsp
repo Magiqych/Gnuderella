@@ -1,0 +1,106 @@
+;============================================================
+;                                     	magiqych/2025-01-09
+;	GnuDerella mock v.2
+;
+;============================================================
+
+#include "d3m.hsp"
+#include "hspcv.as"
+;システム変数
+win_x = 640 : win_y  = 480
+score_speed = 2.0
+;譜面
+score_buffer_id = 10
+score_resized_budffer_id = 11
+score_actual_size_y = 0
+;bufferにロード
+buffer score_buffer_id
+    picload "TEST_SCORE1.png",2
+    score_actual_size_y = ginfo_winy
+;スピードに合わせてリサイズ
+score_resized_size_y = score_actual_size_y * score_speed
+buffer score_resized_budffer_id,win_x,score_resized_size_y
+    gzoom win_x,score_resized_size_y,score_buffer_id,0,0,win_x,score_actual_size_y,1
+
+screen 0, win_x, win_y
+    ;カメラの初期設定
+    dim cam,6
+	;camPosition
+    cam(0) = 0 : cam(1) = 0: cam(2) = 100
+	;camDestination
+	cam(3) = 0 : cam(4) = 10 : cam(5) = 100
+	d3setcam cam(0),cam(1),cam(2),cam(3),cam(4),cam(5),1.2
+
+	;レーン数設定
+	lane_num = 5
+
+	;ノーツ生成エリアの初期設定
+	notes_spawn_pos_y = 1500.0
+	notes_spawn_pos_z = 700.0
+	ddim noteSpawnCircle,lane_num,3
+	;tapCircleの初期座標設定
+	for index,0,lane_num,1
+		noteSpawnCircle(index,0) = double(-200 + (500/lane_num) * index)
+		noteSpawnCircle(index,1) = notes_spawn_pos_y
+		noteSpawnCircle(index,2) = notes_spawn_pos_z
+	next
+
+	;タップエリアの初期設定
+	tap_area_pos_y = 350.0
+	tap_area_pos_z = 0.0
+	ddim tapCircle,lane_num,3
+	;tapCircleの初期座標設定
+	for index,0,lane_num,1
+		tapCircle(index,0) = noteSpawnCircle(index,0)
+		tapCircle(index,1) = tap_area_pos_y
+		tapCircle(index,2) = tap_area_pos_z
+	next
+
+    ;y座標リスト作成
+    ddim y_list,notes_spawn_pos_z+1,2
+    alpha = 0.0 + (notes_spawn_pos_y-tap_area_pos_y)/(notes_spawn_pos_z*notes_spawn_pos_z)
+    for index,0,0+notes_spawn_pos_z+1,1
+        ;手前
+        y_list(index,0) = alpha * (index) * (index) + tap_area_pos_y
+        ;奥
+        y_list(index,1) = alpha * (index+1) * (index+1) + tap_area_pos_y
+    next
+
+
+
+	;タイミング変数
+	timing = 0
+    offset = 2000
+    pos_offset_x = 100
+	repeat
+		;ログ変数
+		logging = ""
+		;描写先を仮想画面にスイッチ
+		redraw 0
+		; 画面クリア
+		color 0, 0, 0 : boxf
+
+        ;譜面描写
+        for index,0+notes_spawn_pos_z,0,-1
+            x = pos_offset_x+0-win_x/2,  pos_offset_x+0+win_x/2,  pos_offset_x+0+win_x/2, pos_offset_x+0-win_x/2
+            y = y_list(index,0),y_list(index,0),y_list(index,1),y_list(index,1)
+            z = index,index,index-1,index-1
+            d3texture  x, y, z, score_resized_budffer_id, 0,score_actual_size_y-(index + timing -offset),win_x,1
+        next
+		; 座標平面描画
+		color 0,255,0
+		repeat 31
+			a = cnt * 2000 / 30 - 1000
+			d3line a, 1000, 0,  a, -1000, 0
+			d3line 1000, a, 0,  -1000, a, 0
+		loop
+		;タイミング変数インクリメント
+		timing = timing + 1
+        if score_actual_size_y-(index + timing -offset) <= 0{
+            timing = 0
+        }
+		;画面更新
+		redraw 1
+		await 1
+	loop
+

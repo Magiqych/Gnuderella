@@ -397,14 +397,14 @@
             // 
             // renderControl1
             // 
-            renderControl1.Location = new Point(610, 30);
+            renderControl1.Location = new Point(1233, 205);
             renderControl1.Name = "renderControl1";
-            renderControl1.Size = new Size(1139, 906);
+            renderControl1.Size = new Size(516, 731);
             renderControl1.TabIndex = 1;
             // 
             // button1
             // 
-            button1.Location = new Point(54, 84);
+            button1.Location = new Point(855, 31);
             button1.Name = "button1";
             button1.Size = new Size(477, 34);
             button1.TabIndex = 0;

@@ -166,6 +166,8 @@ namespace ScoreEditor.Models
         /// ノーツ到達座標
         /// </summary>
         public Vector3 DestPos { get; set; }
-
+        /// <summary>
+        /// :TODO タイプ列挙体
+        /// </summary>
     }
 }

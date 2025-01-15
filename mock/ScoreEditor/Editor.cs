@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave;
 using ScoreEditor.Models;
+using ScoreEditor.Settings;
 using ScoreEditor.Utilities;
 using SkiaSharp;
 using System;
@@ -149,10 +150,11 @@ namespace ScoreEditor
 
         private void ScoreSkControl_PaintSurface(object sender, SkiaSharp.Views.Desktop.SKPaintSurfaceEventArgs e)
         {
-            if (scoreProject == null)
+            if (score == null)
             {
                 return;
             }
+
             canvasHeight = ScoreSkControl.Height;
             canvasWidth = ScoreSkControl.Width;
             SKImageInfo info = e.Info;
@@ -278,7 +280,7 @@ namespace ScoreEditor
 
         private void LaneInit()
         {
-            if (scoreProject == null)
+            if (score == null)
             {
                 return;
             }
@@ -286,12 +288,12 @@ namespace ScoreEditor
             canvasWidth = ScoreSkControl.Width;
             List<double> laneaxis = new List<double>();
             List<double> LaneX = new List<double>();
-            for (int i = 0; i < scoreProject.LaneCount; i++)
+            for (int i = 0; i < score.NumberOfLanes; i++)
             {
-                laneaxis.Add(canvasWidth / scoreProject.LaneCount * i);
-                LaneX.Add((canvasWidth / scoreProject.LaneCount / 2) * (i * 2 + 1));
+                laneaxis.Add(canvasWidth / score.NumberOfLanes * i);
+                LaneX.Add((canvasWidth / score.NumberOfLanes / 2) * (i * 2 + 1));
             }
-            lane = new Lane { LaneAxis = laneaxis, LaneX = LaneX ,LaneWidth = canvasWidth / scoreProject.LaneCount };
+            lane = new Lane { LaneAxis = laneaxis, LaneX = LaneX ,LaneWidth = canvasWidth / score.NumberOfLanes };
         }
 
         private void ScoreSkControl_Click(object sender, EventArgs e)
@@ -301,10 +303,18 @@ namespace ScoreEditor
 
         private void ScoreSkControl_MouseClick(object sender, MouseEventArgs e)
         {
-            if (scoreProject == null)
+            if (score == null)
             {
                 return;
             }
+            if (waveOutEvent == null)
+            {
+                return;
+            }
+            //音声再生停止
+            waveOutEvent.Stop();
+            musicTimer.Stop();
+
             var clickedX = e.X;
             var clickedY = e.Y;
             // clickedXがどのレーンに属するかを判定

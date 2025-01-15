@@ -5,61 +5,34 @@
     /// </summary>
     internal class ScoreProject
     {
+        #region メンバ
         /// <summary>
         /// プロジェクト名
         /// </summary>
-        public string ProjectName { get; set; }
-
+        public string ProjectName { get; set; } = string.Empty;
         /// <summary>
         /// プロジェクトパス
         /// </summary>
-        public string ProjectPath { get; set; }
-
+        public string ProjectPath { get; set; } = string.Empty;
         /// <summary>
         /// 楽曲ファイルパス
         /// </summary>
-        public string MusicFilePath { get; set; }
-
+        public string MusicFilePath { get; set; } = string.Empty;
         /// <summary>
         /// 背景ファイルパス
         /// </summary>
-        public string BackGroundFilePath { get; set; }
-
-        /// <summary>
-        /// レーン数
-        /// </summary>
-        public int LaneCount { get; set; }
-
-        /// <summary>
-        /// 1分間の拍数
-        /// </summary>
-        public int BPM { get; set; }
-
-        /// <summary>
-        /// 1小節の拍数
-        /// </summary>
-        public int BeatsPerBar { get; set; }
-
-        /// <summary>
-        /// 正規化されたノーツ速度
-        /// </summary>
-        public double NormalizedNotesSpeed { get; set; }
-
-        /// <summary>
-        /// ノーツ速度
-        /// </summary>
-        public double NotesSpeed { get; set; }
-
+        public string BackGroundFilePath { get; set; } = string.Empty;
         /// <summary>
         /// スコア作成者
         /// </summary>
-        public string Author { get; set; }
-
+        public string Author { get; set; } = string.Empty;
         /// <summary>
         /// クレジット
         /// </summary>
-        public string Credit { get; set; }
+        public string Credit { get; set; } = string.Empty;
+        #endregion
 
+        #region コンストラクタ
         /// <summary>
         /// ScoreProject クラスの新しいインスタンスを初期化します。
         /// </summary>
@@ -69,26 +42,17 @@
         /// <param name="backGroundFilePath">背景ファイルパス</param>
         /// <param name="author">スコア作成者</param>
         /// <param name="credit">クレジット</param>
-        /// <param name="laneCount">レーン数</param>
-        /// <param name="normalizedNotesSpeed">正規化されたノーツ速度</param>
-        /// <param name="notesSpeed">ノーツ速度</param>
         public ScoreProject(string projectName,
             string projectPath,
             string musicFilePath,
             string backGroundFilePath,
             string author = "",
-            string credit = "",
-            int laneCount = Constants.DefaultNumberOfLanes,
-            double normalizedNotesSpeed = Constants.NormalizedNotesSpeed,
-            double notesSpeed = Constants.NormalizedNotesSpeed)
+            string credit = "")
         {
             ProjectName = projectName;
             ProjectPath = projectPath;
             MusicFilePath = musicFilePath;
             BackGroundFilePath = backGroundFilePath;
-            LaneCount = laneCount;
-            NormalizedNotesSpeed = normalizedNotesSpeed;
-            NotesSpeed = notesSpeed;
             Author = author;
             Credit = credit;
         }
@@ -97,10 +61,8 @@
         /// </summary>
         public ScoreProject()
         {
-            LaneCount = Constants.DefaultNumberOfLanes;
-            NormalizedNotesSpeed = Constants.NormalizedNotesSpeed;
-            NotesSpeed = Constants.NormalizedNotesSpeed;
         }
+        #endregion
     }
 }
 

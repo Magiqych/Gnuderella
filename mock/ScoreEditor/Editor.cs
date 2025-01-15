@@ -56,17 +56,17 @@ namespace ScoreEditor
         /// <param name="e"></param>
         private async void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string scoreProjectJsonFilePath = Path.Combine(devScoreProjectPath, Constants.ScoreProjectFileName);
-            string scoreJsonFilePath = Path.Combine(devScoreProjectPath, Constants.ScoreFileName);
+            string scoreProjectJsonFilePath = Path.Combine(devScoreProjectPath, AppSettings.ScoreProjectFileName);
+            string scoreJsonFilePath = Path.Combine(devScoreProjectPath, AppSettings.ScoreFileName);
             try
             {
                 if (!File.Exists(scoreProjectJsonFilePath))
                 {
-                    throw new FileNotFoundException(Constants.ScoreProjectFileName + "ファイルが見つかりません。", scoreProjectJsonFilePath);
+                    throw new FileNotFoundException(AppSettings.ScoreProjectFileName + "ファイルが見つかりません。", scoreProjectJsonFilePath);
                 }
                 if (!File.Exists(scoreJsonFilePath))
                 {
-                    throw new FileNotFoundException(Constants.ScoreFileName + "ファイルが見つかりません。", scoreJsonFilePath);
+                    throw new FileNotFoundException(AppSettings.ScoreFileName + "ファイルが見つかりません。", scoreJsonFilePath);
                 }
                 scoreProject = JsonHelper.LoadFromJsonFile<ScoreProject>(scoreProjectJsonFilePath);
                 score = JsonHelper.LoadFromJsonFile<Score>(scoreJsonFilePath);

@@ -1,18 +1,16 @@
-﻿namespace ScoreEditor.Settings
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ScoreEditor.Settings
 {
     /// <summary>
-    /// 定数を表すクラス
+    /// 譜面定数
     /// </summary>
-    public static class Constants
+    public static partial class AppSettings
     {
-        #region アプリケーション
-        /// <summary>
-        /// アプリ名
-        /// </summary>
-        public const string AppName = "GnuderellaScoreMaker";
-        #endregion
-
-        #region 譜面定数
         /// <summary>
         /// スコアプロジェクトファイル名
         /// </summary>
@@ -45,6 +43,5 @@
         /// 拍数のデフォルト値
         /// </summary>
         public const int DefaultBeatsPerBar = 16;
-        #endregion
     }
 }

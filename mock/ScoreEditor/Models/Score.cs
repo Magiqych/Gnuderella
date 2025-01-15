@@ -102,9 +102,9 @@ namespace ScoreEditor.Models
         public Score()
         {
             NotesGroupList = new List<NotesGroup>();
-            NormalizedNotesSpeed = Constants.NormalizedNotesSpeed;
-            NotesSpeed = Constants.NormalizedNotesSpeed;
-            NotesSpeedRatio = Constants.NormalizedNotesSpeed / Constants.NormalizedNotesSpeed;
+            NormalizedNotesSpeed = AppSettings.NormalizedNotesSpeed;
+            NotesSpeed = AppSettings.NormalizedNotesSpeed;
+            NotesSpeedRatio = AppSettings.NormalizedNotesSpeed / AppSettings.NormalizedNotesSpeed;
             BeatsStatic = new List<double>();
             BeatsDynamic = new List<double>();
         }

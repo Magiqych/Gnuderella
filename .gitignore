@@ -10,6 +10,23 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+## 譜面プロジェクト関連
+music.mp3
+Score.json
+ScoreProject.json
+
+## VSStudio関連
+bin/
+obj/
+.*.suo
+.*.user
+.*.userosscache
+.*.sln.*
+
+## Python関連
+.*venv/
+.*mypy_cache/
+
 ## Code関連
 *.code-workspace
 

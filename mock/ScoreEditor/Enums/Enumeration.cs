@@ -50,7 +50,7 @@ namespace ScoreEditor.Enums
 
         public override bool Equals(object? obj)
         {
-            if (obj is Enumeration enemyEnum) return this == enemyEnum;
+            if (obj is Enumeration enumeration) return this == enumeration;
             return false;
         }
 

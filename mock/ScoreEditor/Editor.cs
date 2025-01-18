@@ -247,7 +247,7 @@ namespace ScoreEditor
                 foreach (var notes in notesGroup.NotesList)
                 {
                     var spawnLaneIndex = notes.SpawnLaneIndex;
-                    var timing = notes.Timing;
+                    var timing = notes.NormalizedTiming;
                     if (AreaOfRender[0] <= timing && timing <= AreaOfRender[1])
                     {
                         var skPaint = new SKPaint
@@ -356,12 +356,17 @@ namespace ScoreEditor
             //ノーツ追加
             if (!IsEdit)
             {
-                NotesGroup notesGroup = new NotesGroup();
+                NotesGroup notesGroup = new NotesGroup
+                {
+                    NotesGroupType = Enums.NotesGroupType.NotGrouped,
+                    NotesList = new List<Notes>(),
+                };
                 Notes notes = new Notes
                 {
                     SpawnLaneIndex = clickedLane,
                     DestLaneIndex = clickedLane,
-                    Timing = clickedTime
+                    NormalizedTiming = clickedTime,
+                    NotesType = Enums.NotesType.Single,
                 };
                 notesGroup.NotesList.Add(notes);
                 score.NotesGroupList.Add(notesGroup);

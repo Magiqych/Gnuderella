@@ -25,22 +25,25 @@ namespace ScoreEditor.Models
         }
 
         /// <summary>
-        /// ノーツグループを統合します
+        /// ノーツグループをマージします。
         /// </summary>
-        /// <param name="notesGroupA">統合するノーツグループA</param>
-        /// <param name="notesGroupB">統合するノーツグループB</param>
-        public void MergeNotesGroup(NotesGroup notesGroupA, NotesGroup notesGroupB)
+        /// <param name="ToMergeNoteGroup">マージするノーツグループのリスト</param>
+        public void MergeNotesGroup(List<NotesGroup> ToMergeNoteGroup)
         {
             //マージするノーツグループの新規作成
             var mergedNotesGroup = new NotesGroup();
-            mergedNotesGroup.NotesList.AddRange(notesGroupA.NotesList);
-            mergedNotesGroup.NotesList.AddRange(notesGroupB.NotesList);
+            foreach (var notesGroup in ToMergeNoteGroup)
+            {
+                mergedNotesGroup.NotesList.AddRange(notesGroup.NotesList);
+            }
             mergedNotesGroup.NotesGroupType = NotesGroupType.Grouped;
             //ノーツグループリストの更新
             NotesGroupList.Add(mergedNotesGroup);
-            //ノーツグループリストからノーツグループAとノーツグループBを削除
-            NotesGroupList.Remove(notesGroupA);
-            NotesGroupList.Remove(notesGroupB);
+            //ノーツグループリストからノーツグループ
+            foreach (var notesGroup in ToMergeNoteGroup)
+            {
+                NotesGroupList.Remove(notesGroup);
+            }
         }
 
         /// <summary>
@@ -53,7 +56,7 @@ namespace ScoreEditor.Models
             {
                 var newNotesGroup = new NotesGroup();
                 newNotesGroup.NotesList.Add(notes);
-                newNotesGroup.NotesGroupType = NotesGroupType.Single;
+                newNotesGroup.NotesGroupType = NotesGroupType.NotGrouped;
                 NotesGroupList.Add(newNotesGroup);
             }
             //分割元のノーツグループを削除

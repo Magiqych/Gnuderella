@@ -3,35 +3,39 @@
     /// <summary>
     /// ノーツのタイプを表す列挙体
     /// </summary>
-    public enum NotesType
+    public class NotesType : Enumeration
     {
         /// <summary>
-        /// 単一ノーツ
+        /// シングルノーツ
         /// </summary>
-        Single,
+        public static NotesType Single = new(1, nameof(Single));
         /// <summary>
         /// ロングノーツ
         /// </summary>
-        Long,
+        public static NotesType Long = new(2, nameof(Long));
         /// <summary>
         /// 右フリックノーツ
         /// </summary>
-        Flick_Riught,
+        public static NotesType Flick_Riught = new(3, nameof(Flick_Riught));
         /// <summary>
         /// 左フリックノーツ
         /// </summary>
-        Flick_Left,
+        public static NotesType Flick_Left = new(4, nameof(Flick_Left));
         /// <summary>
         /// 上フリックノーツ
         /// </summary>
-        Flick_Up,
+        public static NotesType Flick_Up = new(5, nameof(Flick_Up));
         /// <summary>
         /// 下フリックノーツ
         /// </summary>
-        Flick_Down,
+        public static NotesType Flick_Down = new(6, nameof(Flick_Down));
         /// <summary>
         /// スライドノーツ
-        /// </summary>
-        Slide
+        /// </summary> 
+        public static NotesType Slide = new(7, nameof(Slide));
+
+        public NotesType(int id, string name) : base(id, name)
+        {
+        }
     }
 }

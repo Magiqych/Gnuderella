@@ -42,5 +42,14 @@ namespace ScoreEditor.Models
         /// </summary>
         public NotesType NotesType { get; set; }
         #endregion
+
+        #region コンストラクタ
+        /// <summary>
+        /// Notes クラスの新しいインスタンスを初期化します。
+        /// </summary>
+        public Notes()
+        {
+        }
+        #endregion
     }
 }

@@ -3,15 +3,19 @@
     /// <summary>
     /// ノーツグループのタイプ
     /// </summary>
-    public enum NotesGroupType
+    public class NotesGroupType : Enumeration
     {
         /// <summary>
-        /// 単一ノーツ
+        /// グループ化されていない
         /// </summary>
-        Single,
+        public static NotesGroupType NotGrouped = new(1, nameof(NotGrouped));
         /// <summary>
-        /// グループ化されたノーツ
+        /// グループ化されている
         /// </summary>
-        Grouped,
+        public static NotesGroupType Grouped = new(2, nameof(Grouped));
+
+        public NotesGroupType(int id, string name): base(id, name)
+        {
+        }
     }
 }
